@@ -372,6 +372,7 @@ public class BlockCable extends Block implements ITileEntityProvider {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return CableRenderer.BLOCK_RENDER_TYPE;
     }
