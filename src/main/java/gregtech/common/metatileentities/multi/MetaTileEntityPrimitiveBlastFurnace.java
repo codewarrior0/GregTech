@@ -9,6 +9,7 @@ import gregtech.api.GTValues;
 import gregtech.api.capability.impl.ItemHandlerProxy;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
+import gregtech.api.gui.widgets.LabelWidget;
 import gregtech.api.gui.widgets.ProgressWidget.MoveType;
 import gregtech.api.gui.widgets.SlotWidget;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -306,20 +307,21 @@ public class MetaTileEntityPrimitiveBlastFurnace extends MultiblockControllerBas
 
     public ModularUI.Builder createJeiUITemplate(IItemHandlerModifiable importItems, IItemHandlerModifiable exportItems) {
         return ModularUI.builder(GuiTextures.BACKGROUND, 176, 166)
-            .widget(new SlotWidget(importItems, 0, 33, 15, true, true)
+            .widget(new SlotWidget(importItems, 0, 52, 25, true, true)
                 .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.INGOT_OVERLAY))
-            .widget(new SlotWidget(importItems, 1, 33, 33, true, true)
+            .widget(new SlotWidget(importItems, 1, 52, 43, true, true)
                 .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.FURNACE_OVERLAY))
-            .progressBar(this::getProgressScaled, 58, 24, 20, 15, GuiTextures.BRONZE_BLAST_FURNACE_PROGRESS_BAR, MoveType.HORIZONTAL)
-            .widget(new SlotWidget(exportItems, 0, 85, 24, true, false)
+            .progressBar(this::getProgressScaled, 77, 34, 20, 15, GuiTextures.BRONZE_BLAST_FURNACE_PROGRESS_BAR, MoveType.HORIZONTAL)
+            .widget(new SlotWidget(exportItems, 0, 104, 34, true, false)
                 .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.INGOT_OVERLAY))
-            .widget(new SlotWidget(exportItems, 1, 103, 24, true, false)
+            .widget(new SlotWidget(exportItems, 1, 122, 34, true, false)
                 .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.DUST_OVERLAY));
 
     }
     @Override
     protected ModularUI createUI(EntityPlayer entityPlayer) {
         return createJeiUITemplate(importItems, exportItems)
+            .widget(new LabelWidget(5, 5, getMetaFullName()))
             .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT)
             .build(getHolder(), entityPlayer);
     }
