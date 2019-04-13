@@ -304,8 +304,7 @@ public class MetaTileEntityPrimitiveBlastFurnace extends MultiblockControllerBas
         return new MetaTileEntityPrimitiveBlastFurnace(metaTileEntityId);
     }
 
-    @Override
-    protected ModularUI createUI(EntityPlayer entityPlayer) {
+    public ModularUI.Builder createJeiUITemplate(IItemHandlerModifiable importItems, IItemHandlerModifiable exportItems) {
         return ModularUI.builder(GuiTextures.BACKGROUND, 176, 166)
             .widget(new SlotWidget(importItems, 0, 33, 15, true, true)
                 .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.INGOT_OVERLAY))
@@ -315,7 +314,12 @@ public class MetaTileEntityPrimitiveBlastFurnace extends MultiblockControllerBas
             .widget(new SlotWidget(exportItems, 0, 85, 24, true, false)
                 .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.INGOT_OVERLAY))
             .widget(new SlotWidget(exportItems, 1, 103, 24, true, false)
-                .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.DUST_OVERLAY))
+                .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.DUST_OVERLAY));
+
+    }
+    @Override
+    protected ModularUI createUI(EntityPlayer entityPlayer) {
+        return createJeiUITemplate(importItems, exportItems)
             .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT)
             .build(getHolder(), entityPlayer);
     }

@@ -12,11 +12,14 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.machines.FuelRecipeMap;
+import gregtech.api.recipes.recipes.PrimitiveBlastFurnaceRecipe;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoCategory;
 import gregtech.integration.jei.recipe.GTRecipeWrapper;
+import gregtech.integration.jei.recipe.PBFRecipeMapCategory;
+import gregtech.integration.jei.recipe.PBFRecipeWrapper;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
 import gregtech.integration.jei.recipe.fuel.FuelRecipeMapCategory;
 import gregtech.integration.jei.recipe.fuel.GTFuelRecipeWrapper;
@@ -31,6 +34,8 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static gregtech.common.metatileentities.MetaTileEntities.PRIMITIVE_BLAST_FURNACE;
 
 @JEIPlugin
 public class GTJeiPlugin implements IModPlugin {
@@ -47,6 +52,8 @@ public class GTJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         registry.addRecipeCategories(new MultiblockInfoCategory(registry.getJeiHelpers()));
+        registry.addRecipeCategories(new PBFRecipeMapCategory(registry.getJeiHelpers().getGuiHelper()));
+
         for (RecipeMap<?> recipeMap : RecipeMap.getRecipeMaps()) {
             registry.addRecipeCategories(new RecipeMapCategory(recipeMap, registry.getJeiHelpers().getGuiHelper()));
         }
@@ -60,6 +67,10 @@ public class GTJeiPlugin implements IModPlugin {
         IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
         MultiblockInfoCategory.registerRecipes(registry);
+
+        registry.handleRecipes(PrimitiveBlastFurnaceRecipe.class, PBFRecipeWrapper::new, PBFRecipeMapCategory.getInstanceUid());
+        registry.addRecipes(RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES, PBFRecipeMapCategory.getInstanceUid());
+
         registry.handleRecipes(CustomItemReturnShapedOreRecipeRecipe.class, recipe -> new CustomItemReturnRecipeWrapper(jeiHelpers, recipe), VanillaRecipeCategoryUid.CRAFTING);
 
         ModularUIGuiHandler modularUIGuiHandler = new ModularUIGuiHandler();
@@ -107,5 +118,8 @@ public class GTJeiPlugin implements IModPlugin {
         registry.addRecipeCatalyst(MetaTileEntities.LARGE_STEEL_BOILER.getStackForm(), semiFluidMapId);
         registry.addRecipeCatalyst(MetaTileEntities.LARGE_TITANIUM_BOILER.getStackForm(), semiFluidMapId);
         registry.addRecipeCatalyst(MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER.getStackForm(), semiFluidMapId);
+
+        registry.addRecipeCatalyst(MetaTileEntities.PRIMITIVE_BLAST_FURNACE.getStackForm(), PBFRecipeMapCategory.getInstanceUid());
+
     }
 }
