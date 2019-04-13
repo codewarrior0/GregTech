@@ -39,6 +39,7 @@ import static gregtech.common.metatileentities.MetaTileEntities.PRIMITIVE_BLAST_
 
 @JEIPlugin
 public class GTJeiPlugin implements IModPlugin {
+    public static IJeiRuntime runtime;
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -63,6 +64,11 @@ public class GTJeiPlugin implements IModPlugin {
     }
 
     @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        runtime = jeiRuntime;
+    }
+
+    @Override
     public void register(IModRegistry registry) {
         IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
@@ -83,6 +89,7 @@ public class GTJeiPlugin implements IModPlugin {
                 .map(r -> new GTRecipeWrapper(recipeMap, r))
                 .collect(Collectors.toList());
             registry.addRecipes(recipesList, GTValues.MODID + ":" + recipeMap.unlocalizedName);
+
         }
 
         for (FuelRecipeMap fuelRecipeMap : FuelRecipeMap.getRecipeMaps()) {

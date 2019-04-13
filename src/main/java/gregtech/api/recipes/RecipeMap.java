@@ -24,10 +24,13 @@ import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.ValidationResult;
+import gregtech.integration.jei.GTJeiPlugin;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -236,7 +239,30 @@ public class RecipeMap<R extends RecipeBuilder<R>> {
     //this DOES NOT include machine control widgets or binds player inventory
     public ModularUI.Builder createUITemplate(DoubleSupplier progressSupplier, IItemHandlerModifiable importItems, IItemHandlerModifiable exportItems, FluidTankList importFluids, FluidTankList exportFluids) {
         ModularUI.Builder builder = ModularUI.defaultBuilder();
-        builder.widget(new ProgressWidget(progressSupplier, 77, 22, 20, 20, progressBarTexture, moveType));
+        builder.widget(new ProgressWidget(progressSupplier, 77, 22, 20, 20, progressBarTexture, moveType) {
+            @Override
+            public boolean mouseClicked(int mouseX, int mouseY, int button) {
+                if(GTJeiPlugin.runtime == null) return false;
+                
+                if (isMouseOver(xPosition, yPosition, width, height, mouseX, mouseY)) {
+                    GTJeiPlugin.runtime.getRecipesGui().showCategories(Collections.singletonList(GTValues.MODID + ":" + unlocalizedName));
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void drawInForeground(int mouseX, int mouseY) {
+                if (GTJeiPlugin.runtime == null) return;
+
+                if (isMouseOver(xPosition, yPosition, width, height, mouseX, mouseY)) {
+                    GuiUtils.drawHoveringText(Collections.singletonList("Show Recipes"), mouseX, mouseY,
+                        sizes.getScreenWidth() - sizes.getGuiLeft(),
+                        sizes.getScreenHeight() - sizes.getGuiTop(), 300,
+                        Minecraft.getMinecraft().fontRenderer);
+                }
+            }
+        });
         addInventorySlotGroup(builder, importItems, importFluids, false);
         addInventorySlotGroup(builder, exportItems, exportFluids, true);
         return builder;
